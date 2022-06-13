@@ -34,6 +34,5 @@ protected void setDatum(String datum) {
 public Reservierung() {
 }
 
-
 }
 
