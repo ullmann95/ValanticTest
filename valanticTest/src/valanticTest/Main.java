@@ -4,7 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-/*Entfernt für das Programm überflüssige Satzzeichen und konvertiert alle enthaltenen Chars in Kleinschreibung*/
+	/*
+	 * Entfernt überflüssige Satzzeichen und konvertiert alle enthaltenen Chars zu
+	 * Kleinbuchstaben
+	 */
 	public static String stringFormatieren(String s) {
 
 		s = s.toLowerCase();
@@ -13,125 +16,135 @@ public class Main {
 		s = s.replace('?', ' ');
 		return s;
 	}
-/*Erzeugt einheitliche Datumsangaben*/
+
+	/* Erzeugt einheitliche Datumsangaben */
 	public static String datumFormatieren(String tage, String monat) {
 		switch (monat) {
-		
+
 		case "januar":
 			tage = tage + "01.";
 			break;
+			
 		case "februar":
 			tage = tage + "02.";
 			break;
+			
 		case "märz":
 			tage = tage + "03.";
 			break;
+			
 		case "april":
 			tage = tage + "04.";
 			break;
+			
 		case "mai":
 			tage = tage + "05.";
 			break;
+			
 		case "juni":
 			tage = tage + "06.";
 			break;
+			
 		case "juli":
 			tage = tage + "07.";
 			break;
+			
 		case "august":
 			tage = tage + "08.";
 			break;
+			
 		case "september":
 			tage = tage + "09.";
 			break;
+			
 		case "oktober":
 			tage = tage + "10.";
 			break;
+			
 		case "november":
 			tage = tage + "11.";
 			break;
+			
 		case "dezember":
 			tage = tage + "12.";
 			break;
 		}
 		return tage;
 	}
-	
-	
-/*Entnimmt aus gegebenen String alle wichtigen Informationen zu einer Reservierung*/
+
+	/*
+	 * Entnimmt aus gegebenen String alle wichtigen Informationen zu einer
+	 * Reservierung
+	 */
 	public static void erkenneReservierung(String reservierung) {
-		
-		reservierung = stringFormatieren(reservierung);//Entfernen von Satzzeichen und kleinschreiben des Inputs
+
+		reservierung = stringFormatieren(reservierung); //Entfernen von Satzzeichen und kleinschreiben des Inputs
 		Reservierung reservierung1 = new Reservierung();//Erzeuge neue Reservierung
-		int index = 0;									//Zähler für Schleifen
-		String[] arrayOfWords = reservierung.split(" ");//Array welches die einzelnen Wörtern vom Inputstring enthält
-
-		reservierung1.setName(arrayOfWords[arrayOfWords.length - 2]+ " " //Entnimmt den Namen aus dem String, mit Annahme dass er am Ende steht
-		+ arrayOfWords[arrayOfWords.length - 1]);
-
-		if (reservierung.contains("uhr")) {	//Sucht nach dem Wort "Uhr" im String und merkt sich dessen Position
-
-			for (int i = 0; i < arrayOfWords.length; i++) {
-
-				if (arrayOfWords[i].contains("uhr")) {
-
-					index = i;
-					break;
-
-				}
-			}
-
-			reservierung1.setUhrzeit(arrayOfWords[index - 1] + " Uhr"); //Setzt Uhrzeit in der Reservierung
-			
-			arrayOfWords[index - 1] = ""; //Löschen von bereits verwendeter Information
-
-			reservierung = "";
-
-			for (int i = 0; i < arrayOfWords.length; i++) {
-
-				reservierung = reservierung + " " + arrayOfWords[i];
-			}
+		int indexUhr = 0; // Zählervariablen
+		int indexAm = 0;
+		String[] arrayOfWords = reservierung.split(" "); //Array welches die einzelnen Wörtern vom Inputstring enthält
+		if(arrayOfWords.length >=2 ) {
+			reservierung1.setName(arrayOfWords[arrayOfWords.length - 2] + " " //Entnimmt den Namen aus dem String, unter
+					+ arrayOfWords[arrayOfWords.length - 1]);																//der Annahme dass er am Ende steht
 
 		}
-		if (reservierung.contains("am")) {	//Sucht nach dem Wort "am" im String und merkt sich dessen Position
+		else {
+			reservierung1.setName("Invalid Name!");	
+		}
+		
 
-			for (int i = 0; i < arrayOfWords.length; i++) {
+		for (int i = 0; i < arrayOfWords.length; i++) { //Merkt sich Position der Stichwörter
 
-				if (arrayOfWords[i].equals("am")) {
+			if (arrayOfWords[i].contains("uhr")) {
 
-					index = i;
-					break;
+				indexUhr = i;
 
+			} else if (arrayOfWords[i].equals("am")) {
+				
+				indexAm = i;
+			}
+		}if(indexUhr > 0) {
+		reservierung1.setUhrzeit(arrayOfWords[indexUhr - 1]); //Setzt Uhrzeit in der Reservierung
+		arrayOfWords[indexUhr - 1] = ""; //Löschen von bereits verwendete Informationen
+		}
+		else {
+			reservierung1.setUhrzeit("Invalid Time!");	
+		}
+		/*
+		 * Speichert entnommenes Datum mit Fallunterscheidung für verschiedene
+		 * Datumsangaben, wie z.B. 01.06. oder 1. Juni
+		 */
+		if(arrayOfWords.length > indexAm + 1) {
+				if (arrayOfWords[indexAm + 1].length() > 3) {
+
+						reservierung1.setDatum(arrayOfWords[indexAm + 1]);
+
+				}else {
+
+						reservierung1.setDatum(datumFormatieren(arrayOfWords[indexAm + 1], arrayOfWords[indexAm + 2]));
 				}
-			}
-			if (arrayOfWords[index + 1].length() > 3) {	//Fallunterscheidung für verschiedene Datumsangaben, wie z.B. 01.06. oder 1. Juni
+				arrayOfWords[indexAm + 1] = "";
+		}else {
+			reservierung1.setDatum("Invalid Date!");
+		}
+		
+		reservierung = "";
 
-				reservierung1.setDatum(arrayOfWords[index + 1]);
+		for (int i = 0; i < arrayOfWords.length; i++) {
 
-			} else {
-
-				reservierung1.setDatum(datumFormatieren(arrayOfWords[index + 1], arrayOfWords[index + 2]));
-			}
-
-			arrayOfWords[index + 1] = "";	//Löschen von bereits verwendeter Information
-			reservierung = "";
-
-			for (int i = 0; i < arrayOfWords.length; i++) {
-
-				reservierung = reservierung + " " + arrayOfWords[i];
-
-			}
-
+			reservierung = reservierung + " " + arrayOfWords[i];
 		}
 
-		Pattern pattern = Pattern.compile("[0-9]+");	//Sucht nach Wörtern, welche nur aus Ziffern bestehen
+		Pattern pattern = Pattern.compile("[0-9]+"); //Sucht nach Wörtern, welche nur aus Ziffern bestehen
 		Matcher matcher = pattern.matcher(reservierung);
 
-		if (matcher.find()) {	//Wenn die Suche erfolgreich war, dann muss es sich um die Anzahl der Gäste handeln
+		if (matcher.find()) { //Wenn die Suche erfolgreich war, dann muss es sich um die Anzahl der Gäste
+								//handeln
 
 			reservierung1.setAnzahlGaeste(Integer.parseInt((reservierung.substring(matcher.start(), matcher.end()))));
 
-		} else {	//Ansonsten wird nach ausgeschrieben Zahlenwörtern gesucht und diese in Integer konvertiert
+		} else { //Ansonsten wird nach ausgeschrieben Zahlenwörtern gesucht und diese zu
+					//Integern konvertiert
 
 			for (int i = 0; i < arrayOfWords.length; i++) {
 
@@ -167,16 +180,20 @@ public class Main {
 				}
 			}
 		}
-		//Ausgabe der Reservierung.
+		// Ausgabe der Reservierung.
+		if(reservierung1.getAnzahlGaeste()>0) {
 		System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
 				+ reservierung1.getUhrzeit() + ", " + reservierung1.getAnzahlGaeste() + ")");
+		}else {
+				System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
+						+ reservierung1.getUhrzeit() + ", " + "Invalid NumberOfGuests!)");
+		}
 	}
 
 	public static void main(String args[]) {
 
 		erkenneReservierung(
-				"Sehr geehrte Damen Herren, wir würden gern am 9. April 9:45 Uhr mit sechs Leuten zum Brunch kommen, Mit freundlichen Grüßen Maria"
-						+ " Meier");
+				"");
 
 	}
 }

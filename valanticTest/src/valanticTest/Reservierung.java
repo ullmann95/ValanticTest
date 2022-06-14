@@ -4,7 +4,7 @@ public class Reservierung {
 private String name;
 private String datum;
 private String uhrzeit;
-private int anzahlGaeste;
+private int anzahlGaeste = -1;
 
 public String getName() {
 	return name;
