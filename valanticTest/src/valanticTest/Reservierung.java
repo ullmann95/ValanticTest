@@ -4,7 +4,7 @@ public class Reservierung {
 private String name;
 private String datum;
 private String uhrzeit;
-private int anzahlGaeste = -1;
+private int anzahlGaeste;
 
 public String getName() {
 	return name;
@@ -30,9 +30,7 @@ public String getDatum() {
 protected void setDatum(String datum) {
 	this.datum = datum;
 }
-
 public Reservierung() {
 }
-
 }
 
