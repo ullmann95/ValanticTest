@@ -167,23 +167,25 @@ public class Main {
 					reservierung1.setAnzahlGaeste(9);
 					break;
 				default:
-					reservierung1.setAnzahlGaeste(-1);
+					if (reservierung1.getAnzahlGaeste() < 1) {
+						reservierung1.setAnzahlGaeste(-1);
+					}
 				}
 			}
-		}
 
-		// Ausgabe der Reservierung mit Fehlererkennung.
-		if (reservierung1.getAnzahlGaeste() > 0) {
-			System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
-					+ reservierung1.getUhrzeit() + ", " + reservierung1.getAnzahlGaeste() + ")");
-		} else {
-			System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
-					+ reservierung1.getUhrzeit() + ", " + "Invalid NumberOfGuests!)");
+			// Ausgabe der Reservierung mit Fehlererkennung.
+			if (reservierung1.getAnzahlGaeste() > 0) {
+				System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
+						+ reservierung1.getUhrzeit() + ", " + reservierung1.getAnzahlGaeste() + ")");
+			} else {
+				System.out.println("(" + reservierung1.getName() + ", " + reservierung1.getDatum() + ", "
+						+ reservierung1.getUhrzeit() + ", " + "Invalid NumberOfGuests!)");
+			}
 		}
 	}
 
 	public static void main(String args[]) {
 
-		erkenneReservierung("");
+		erkenneReservierung("Guten Tag, einen Tisch für zwei Mann am 1.5. 9 Uhr abends, Gruß Franz Schulze");
 	}
 }
